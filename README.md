@@ -39,9 +39,12 @@ into
 4. 💬 The response is displayed in a chat-like interface with fun tips and a **copy button**.
 
    
+## 📸 Screenshots
+Here’s a quick look at the app in action 👇  
 
-
-
+![App Screenshot](screenshots/screenshot1.png)
+![Chat Interaction](screenshots/screenshot2.png)
+![Jargon Output](screenshots/screenshot3.png)
 
 ## 💡 Features  
 
