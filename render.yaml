@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: meeting-jargon-backend
+    env: java
+    plan: free
+    buildCommand: "./mvnw clean package -DskipTests"
+    startCommand: "java -jar target/*.jar"
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
