@@ -50,8 +50,8 @@ public class JargonService {
         }
 
         // ✅ Gemini prompt
-        String prompt = "Convert this sentence into funny over-the-top corporate jargon. Keep the meaning same. " +
-                "Just return the converted text.\n\nSentence: " + sentence;
+        String prompt = "Turn this simple sentence into short, funny office jargon (max 25 words). Keep it casual and creative. Sentence: " + sentence;
+
 
         // Build request JSON
         String requestBody = String.format(

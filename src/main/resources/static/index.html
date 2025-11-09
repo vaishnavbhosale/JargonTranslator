@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meeting Jargon Translator 💼</title>
+    <title>Jargon Translator 💼</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -45,15 +45,15 @@
             Meeting Jargon Translator 💬
         </h1>
         <p class="text-gray-600 mt-2 italic">
-            De-risk your simple language and leverage some synergy.
+            One step at a time and you will get there .
         </p>
     </header>
 
     <div id="chat-history" class="h-80 overflow-y-auto space-y-4 p-4 bg-gray-50 rounded-xl shadow-inner border border-gray-200">
         <div class="flex justify-start">
             <div class="max-w-xs md:max-w-md bg-ai-bubble p-3 rounded-tr-xl rounded-bl-xl rounded-br-xl shadow-md text-gray-700">
-                <span class="font-semibold text-corporate-blue">🤖 HR Bot:</span>
-                <p class="mt-1">Welcome! Let's align on how we can optimize your communication strategy. Drop your simple message below to begin the paradigm shift.</p>
+                <span class="font-semibold text-corporate-blue">vaishnavv:</span>
+                <p class="mt-1">Hey there 👋 I’m Vaishnavv - your friendly corporate jargon translator! Let’s turn plain talk into business brilliance . Drop your simple message below to begin the paradigm shift.</p>
             </div>
         </div>
     </div>
@@ -184,7 +184,7 @@
       try {
         const jargonText = await fetchJargonWithRetry(userText);
         removeTypingIndicator();
-        const aiBubble = createMessageBubble(jargonText, 'ai', '🤖 HR Bot:');
+        const aiBubble = createMessageBubble(jargonText, 'ai', 'vaishnavv:');
         const copyContainer = document.createElement('div');
         copyContainer.className = 'flex justify-start mt-1';
         const copyButton = document.createElement('button');
