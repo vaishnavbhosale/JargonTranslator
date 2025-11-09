@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meeting Jargon Translator 💼</title>
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Configure Tailwind -->
     <script>
         tailwind.config = {
             theme: {
@@ -64,10 +62,8 @@
 </head>
 <body class="font-sans bg-gradient-to-br from-pink-200 to-blue-200 min-h-screen flex flex-col items-center justify-center p-4">
 
-<!-- Main Container -->
 <div class="bg-white/80 backdrop-blur-sm shadow-2xl rounded-3xl p-6 md:p-10 max-w-xl w-full flex flex-col gap-6 transform hover:scale-[1.01] transition-transform duration-300">
 
-    <!-- Header -->
     <header class="text-center">
         <h1 class="text-4xl font-extrabold text-corporate-blue tracking-tight">
             Meeting Jargon Translator 💬
@@ -77,9 +73,7 @@
         </p>
     </header>
 
-    <!-- Chat History Area -->
     <div id="chat-history" class="h-80 overflow-y-auto space-y-4 p-4 bg-gray-50 rounded-xl shadow-inner border border-gray-200">
-        <!-- Initial Greeting -->
         <div class="flex justify-start">
             <div class="max-w-xs md:max-w-md bg-ai-bubble p-3 rounded-tr-xl rounded-bl-xl rounded-br-xl shadow-md text-gray-700">
                 <span class="font-semibold text-corporate-blue">🤖 HR Bot:</span>
@@ -88,7 +82,6 @@
         </div>
     </div>
 
-    <!-- Input Form -->
     <div class="flex flex-col gap-3">
             <textarea
                     id="user-input"
@@ -107,14 +100,14 @@
     </div>
 </div>
 
-<!-- Footer -->
 <footer class="mt-8 text-center text-gray-700 text-sm p-4">
     <p>Built with <span class="text-red-500">❤</span> by Vaishnavv | Powered by <span class="font-bold">Gemini API</span> | Let’s circle back later <span class="text-xl">😉</span></p>
 </footer>
 
 <script>
     // --- CONSTANTS AND DOM ELEMENTS ---
-    const API_URL = 'http://localhost:8080/translate?sentence=';
+    // API URL updated to point to the live Render deployment
+    const API_URL = 'https://jargontranslator.onrender.com/translate?sentence=';
     const MAX_RETRIES = 3;
     const chatHistory = document.getElementById('chat-history');
     const userInput = document.getElementById('user-input');
