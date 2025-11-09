@@ -57,13 +57,6 @@ Here’s a quick look at the app in action 👇
 
 
 
-## 🧠 Inspiration  
-
-We’ve all been in meetings where people say things like *“Let’s circle back offline”* or *“We need to synergize our deliverables.”*  
-This project takes your **normal sentences** and turns them into those kinds of *buzzword masterpieces*! 😄  
-
-
-
 ## 🔮 Future Ideas  
 
 - 🪄 **Simple Mode** — translate jargon *back into normal English*  
@@ -82,4 +75,11 @@ cd JargonTranslator
 ./mvnw spring-boot:run
 
 1. ✍️ The user types a simple sentence.  
-2. 🚀 The frontend sends a request to the backend API:  
+2. 🚀 The frontend sends a request to the backend API:
+
+
+💖 Made By
+Vaishnavv Bhosale
+Engineering Student • Java Backend Enthusiast
+
+“One step at a time and you will get there.” 🌱
