@@ -31,9 +31,9 @@ public class TranslatorController {
         return response;
     }
 
-    @GetMapping("/")
-    public String home() {
-        return "Meeting Jargon Translator is running! Try /translate?sentence=Let's meet tomorrow";
-    }
+//    @GetMapping("/")
+//    public String home() {
+//        return "Meeting Jargon Translator is running! Try /translate?sentence=Let's meet tomorrow";
+//    }
 }
 

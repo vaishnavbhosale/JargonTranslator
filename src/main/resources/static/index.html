@@ -7,57 +7,33 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'corporate-blue': '#1e3a8a',
-                        'jargon-pink': '#fbcfe8',
-                        'user-bubble': '#dbeafe', // Blue-100
-                        'ai-bubble': '#f0fdf4',   // Green-50
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    keyframes: {
-                        'typing': {
-                            '0%, 100%': { opacity: 1 },
-                            '50%': { opacity: 0.5 },
-                        },
-                        'pulse-copy': {
-                            '0%, 100%': { transform: 'scale(1)' },
-                            '50%': { transform: 'scale(1.1)' },
-                        }
-                    },
-                    animation: {
-                        'typing': 'typing 1.5s infinite',
-                        'pulse-copy': 'pulse-copy 0.5s ease-in-out',
-                    }
-                }
+          theme: {
+            extend: {
+              colors: {
+                'corporate-blue': '#1e3a8a',
+                'jargon-pink': '#fbcfe8',
+                'user-bubble': '#dbeafe',
+                'ai-bubble': '#f0fdf4',
+              },
+              fontFamily: { sans: ['Inter', 'sans-serif'] },
+              keyframes: {
+                'typing': { '0%,100%': { opacity: 1 }, '50%': { opacity: 0.5 } },
+                'pulse-copy': { '0%,100%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.1)' } }
+              },
+              animation: {
+                'typing': 'typing 1.5s infinite',
+                'pulse-copy': 'pulse-copy 0.5s ease-in-out',
+              }
             }
+          }
         }
     </script>
     <style>
-        /* Apply smooth transition to all elements */
-        * {
-            transition: all 0.2s ease-in-out;
-        }
-        /* Custom scrollbar for chat history */
-        #chat-history {
-            scrollbar-width: thin;
-            scrollbar-color: #9ca3af #f3f4f6;
-        }
-        #chat-history::-webkit-scrollbar {
-            width: 8px;
-        }
-        #chat-history::-webkit-scrollbar-track {
-            background: #f3f4f6;
-            border-radius: 10px;
-        }
-        #chat-history::-webkit-scrollbar-thumb {
-            background-color: #9ca3af;
-            border-radius: 10px;
-            border: 2px solid #f3f4f6;
-        }
+        * { transition: all 0.2s ease-in-out; }
+        #chat-history { scrollbar-width: thin; scrollbar-color: #9ca3af #f3f4f6; }
+        #chat-history::-webkit-scrollbar { width: 8px; }
+        #chat-history::-webkit-scrollbar-track { background: #f3f4f6; border-radius: 10px; }
+        #chat-history::-webkit-scrollbar-thumb { background-color: #9ca3af; border-radius: 10px; border: 2px solid #f3f4f6; }
     </style>
 </head>
 <body class="font-sans bg-gradient-to-br from-pink-200 to-blue-200 min-h-screen flex flex-col items-center justify-center p-4">
@@ -83,17 +59,8 @@
     </div>
 
     <div class="flex flex-col gap-3">
-            <textarea
-                    id="user-input"
-                    class="w-full p-4 border-2 border-pink-300 rounded-xl focus:ring-4 focus:ring-blue-400/50 focus:border-blue-500 transition duration-150 resize-none shadow-md placeholder-gray-400"
-                    rows="3"
-                    placeholder="Type your boring message here... (e.g., 'The meeting is canceled')"
-            ></textarea>
-        <button
-                id="jargonify-button"
-                class="w-full bg-corporate-blue text-white font-bold py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-blue-800 transition duration-150 transform active:scale-95 disabled:bg-gray-400 flex items-center justify-center gap-2"
-                onclick="handleJargonify()"
-        >
+        <textarea id="user-input" class="w-full p-4 border-2 border-pink-300 rounded-xl focus:ring-4 focus:ring-blue-400/50 focus:border-blue-500 transition duration-150 resize-none shadow-md placeholder-gray-400" rows="3" placeholder="Type your boring message here... (e.g., 'The meeting is canceled')"></textarea>
+        <button id="jargonify-button" class="w-full bg-corporate-blue text-white font-bold py-3 rounded-xl shadow-lg hover:shadow-xl hover:bg-blue-800 transition duration-150 transform active:scale-95 disabled:bg-gray-400 flex items-center justify-center gap-2" onclick="handleJargonify()">
             Jargonify! <span class="text-xl">🚀</span>
         </button>
         <div id="error-message" class="text-red-600 text-sm italic mt-1 hidden"></div>
@@ -105,9 +72,9 @@
 </footer>
 
 <script>
-    // --- CONSTANTS AND DOM ELEMENTS ---
-    // API URL updated to point to the live Render deployment
-    const API_URL = 'https://jargontranslator.onrender.com/translate?sentence=';
+    // ✅ FIX 1: Make the API call relative (no hardcoded link)
+    const API_URL = '/translate?sentence=';
+
     const MAX_RETRIES = 3;
     const chatHistory = document.getElementById('chat-history');
     const userInput = document.getElementById('user-input');
@@ -115,236 +82,137 @@
     const errorMessage = document.getElementById('error-message');
 
     const tips = [
-        "Tip: Never say it simply if you can say it strategically 💡",
-        "Tip: It's not a problem, it's a synergistic opportunity 📈",
-        "Tip: Always remember to loop in the key stakeholders 🔄",
-        "Tip: Let's take this offline and optimize our bandwidth 🤫",
-        "Tip: Deliverables are best served with robust action items ✅"
+      "Tip: Never say it simply if you can say it strategically 💡",
+      "Tip: It's not a problem, it's a synergistic opportunity 📈",
+      "Tip: Always remember to loop in the key stakeholders 🔄",
+      "Tip: Let's take this offline and optimize our bandwidth 🤫",
+      "Tip: Deliverables are best served with robust action items ✅"
     ];
 
-    // --- UTILITY FUNCTIONS ---
-
-    /**
-     * Creates and appends a message bubble to the chat history.
-     * @param {string} text The message content.
-     * @param {'user'|'ai'} sender Who sent the message.
-     * @param {string} [title] Optional title for the AI message.
-     * @returns {HTMLElement} The created message bubble element.
-     */
     function createMessageBubble(text, sender, title = '') {
-        const isUser = sender === 'user';
-        const bubbleClasses = isUser
-            ? 'bg-user-bubble p-3 rounded-tl-xl rounded-bl-xl rounded-br-xl shadow-md text-gray-800'
-            : 'bg-ai-bubble p-3 rounded-tr-xl rounded-bl-xl rounded-br-xl shadow-md text-gray-700';
-
-        const alignmentClasses = isUser ? 'justify-end' : 'justify-start';
-
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `flex ${alignmentClasses}`;
-
-        const contentDiv = document.createElement('div');
-        contentDiv.className = `max-w-xs md:max-w-md ${bubbleClasses}`;
-
-        if (!isUser && title) {
-            const titleSpan = document.createElement('span');
-            titleSpan.className = 'font-semibold text-corporate-blue';
-            titleSpan.textContent = title;
-            contentDiv.appendChild(titleSpan);
-        }
-
-        const p = document.createElement('p');
-        p.className = isUser ? 'mt-0' : 'mt-1';
-        p.textContent = text;
-        contentDiv.appendChild(p);
-
-        messageDiv.appendChild(contentDiv);
-        chatHistory.appendChild(messageDiv);
-
-        // Scroll to the bottom
-        chatHistory.scrollTop = chatHistory.scrollHeight;
-
-        return contentDiv;
+      const isUser = sender === 'user';
+      const bubbleClasses = isUser ? 'bg-user-bubble p-3 rounded-tl-xl rounded-bl-xl rounded-br-xl shadow-md text-gray-800' : 'bg-ai-bubble p-3 rounded-tr-xl rounded-bl-xl rounded-br-xl shadow-md text-gray-700';
+      const alignmentClasses = isUser ? 'justify-end' : 'justify-start';
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `flex ${alignmentClasses}`;
+      const contentDiv = document.createElement('div');
+      contentDiv.className = `max-w-xs md:max-w-md ${bubbleClasses}`;
+      if (!isUser && title) {
+        const titleSpan = document.createElement('span');
+        titleSpan.className = 'font-semibold text-corporate-blue';
+        titleSpan.textContent = title;
+        contentDiv.appendChild(titleSpan);
+      }
+      const p = document.createElement('p');
+      p.className = isUser ? 'mt-0' : 'mt-1';
+      p.textContent = text;
+      contentDiv.appendChild(p);
+      messageDiv.appendChild(contentDiv);
+      chatHistory.appendChild(messageDiv);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+      return contentDiv;
     }
 
-    /**
-     * Adds the typing indicator (AI message).
-     * @returns {HTMLElement} The typing indicator element.
-     */
     function addTypingIndicator() {
-        const typingContainer = document.createElement('div');
-        typingContainer.id = 'typing-indicator';
-        typingContainer.className = 'flex justify-start';
-
-        const bubble = document.createElement('div');
-        bubble.className = 'max-w-xs md:max-w-md bg-ai-bubble p-3 rounded-tr-xl rounded-bl-xl rounded-br-xl shadow-md text-gray-700 flex items-center space-x-2';
-
-        bubble.innerHTML = `
-            <span class="font-semibold text-corporate-blue">🤖 AI is crafting some corporate nonsense...</span>
-            <span class="inline-block text-xl animate-typing">...</span>
-        `;
-
-        typingContainer.appendChild(bubble);
-        chatHistory.appendChild(typingContainer);
-        chatHistory.scrollTop = chatHistory.scrollHeight;
-        return typingContainer;
+      const typingContainer = document.createElement('div');
+      typingContainer.id = 'typing-indicator';
+      typingContainer.className = 'flex justify-start';
+      const bubble = document.createElement('div');
+      bubble.className = 'max-w-xs md:max-w-md bg-ai-bubble p-3 rounded-tr-xl rounded-bl-xl rounded-br-xl shadow-md text-gray-700 flex items-center space-x-2';
+      bubble.innerHTML = `<span class="font-semibold text-corporate-blue">🤖 AI is crafting some corporate nonsense...</span><span class="inline-block text-xl animate-typing">...</span>`;
+      typingContainer.appendChild(bubble);
+      chatHistory.appendChild(typingContainer);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+      return typingContainer;
     }
 
-    /**
-     * Removes the typing indicator.
-     */
     function removeTypingIndicator() {
-        const indicator = document.getElementById('typing-indicator');
-        if (indicator) {
-            indicator.remove();
-        }
+      const indicator = document.getElementById('typing-indicator');
+      if (indicator) indicator.remove();
     }
 
-    /**
-     * Copies text to the clipboard.
-     * Uses the older document.execCommand('copy') for better iframe compatibility.
-     * @param {string} text The text to copy.
-     * @param {HTMLElement} buttonElement The button that was clicked.
-     */
     function copyToClipboard(text, buttonElement) {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        textarea.style.position = 'fixed'; // Avoid scrolling to bottom
-        textarea.style.left = '-9999px';
-        document.body.appendChild(textarea);
-        textarea.select();
-
-        try {
-            document.execCommand('copy');
-            buttonElement.classList.add('bg-green-500', 'text-white', 'animate-pulse-copy');
-            buttonElement.innerHTML = 'Copied! ✅';
-            setTimeout(() => {
-                buttonElement.classList.remove('bg-green-500', 'text-white', 'animate-pulse-copy');
-                buttonElement.classList.add('bg-blue-500', 'text-white');
-                buttonElement.innerHTML = 'Copy 📋';
-            }, 1500);
-        } catch (err) {
-            console.error('Failed to copy text: ', err);
-            // Fallback UI for error
-            buttonElement.innerHTML = 'Error ❌';
-        } finally {
-            document.body.removeChild(textarea);
-        }
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        buttonElement.classList.add('bg-green-500', 'text-white', 'animate-pulse-copy');
+        buttonElement.innerHTML = 'Copied! ✅';
+        setTimeout(() => {
+          buttonElement.classList.remove('bg-green-500', 'text-white', 'animate-pulse-copy');
+          buttonElement.classList.add('bg-blue-500', 'text-white');
+          buttonElement.innerHTML = 'Copy 📋';
+        }, 1500);
+      } finally {
+        document.body.removeChild(textarea);
+      }
     }
 
-    // --- MAIN APPLICATION LOGIC ---
-
-    /**
-     * Handles the API call with exponential backoff for retries.
-     * @param {string} sentence The user's input sentence.
-     * @param {number} attempt The current retry attempt number.
-     * @returns {Promise<string>} The translated jargon text.
-     */
     async function fetchJargonWithRetry(sentence, attempt = 0) {
-        const url = API_URL + encodeURIComponent(sentence);
-        const delay = Math.pow(2, attempt) * 1000; // Exponential backoff: 1s, 2s, 4s...
-
-        if (attempt > 0) {
-            await new Promise(resolve => setTimeout(resolve, delay));
-        }
-
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const data = await response.json();
-            // Assuming the API returns an object like { jargon: "..." }
-            if (data.jargon && typeof data.jargon === 'string') {
-                return data.jargon;
-            }
-            // Fallback for unexpected API structure
-            return "We need to re-baseline the output structure for this API, but here is your basic message: " + sentence;
-
-        } catch (error) {
-            console.error(`Attempt ${attempt + 1} failed:`, error);
-            if (attempt < MAX_RETRIES - 1) {
-                // Retry
-                return fetchJargonWithRetry(sentence, attempt + 1);
-            } else {
-                // Final failure
-                throw new Error("Maximum retry limit reached. The endpoint is currently out of sync.");
-            }
-        }
+      const url = API_URL + encodeURIComponent(sentence);
+      const delay = Math.pow(2, attempt) * 1000;
+      if (attempt > 0) await new Promise(resolve => setTimeout(resolve, delay));
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
+        if (data.jargon && typeof data.jargon === 'string') return data.jargon;
+        return "We need to re-baseline the output structure for this API, but here is your basic message: " + sentence;
+      } catch (error) {
+        if (attempt < MAX_RETRIES - 1) return fetchJargonWithRetry(sentence, attempt + 1);
+        else throw new Error("Maximum retry limit reached.");
+      }
     }
 
-    /**
-     * Main function to handle user interaction.
-     */
     async function handleJargonify() {
-        const userText = userInput.value.trim();
-        errorMessage.classList.add('hidden');
-
-        if (!userText) {
-            errorMessage.textContent = 'Please provide a simple message to jargonify. We cannot optimize an empty asset.';
-            errorMessage.classList.remove('hidden');
-            return;
-        }
-
-        // 1. Disable input and button
-        jargonifyButton.disabled = true;
-        userInput.disabled = true;
-
-        // 2. Display user message
-        createMessageBubble(userText, 'user');
-        userInput.value = ''; // Clear input field
-
-        // 3. Add typing indicator
-        const typingIndicator = addTypingIndicator();
-
-        try {
-            // 4. Call API with retry logic
-            const jargonText = await fetchJargonWithRetry(userText);
-
-            // 5. Remove typing indicator
-            removeTypingIndicator();
-
-            // 6. Display AI message
-            const aiBubble = createMessageBubble(jargonText, 'ai', '🤖 HR Bot:');
-
-            // 7. Add Copy button below the AI bubble
-            const copyContainer = document.createElement('div');
-            copyContainer.className = 'flex justify-start mt-1';
-            const copyButton = document.createElement('button');
-            copyButton.className = 'bg-blue-500 text-white text-xs px-2 py-1 rounded-full shadow hover:bg-blue-600 transition-colors duration-150';
-            copyButton.innerHTML = 'Copy 📋';
-            copyButton.onclick = () => copyToClipboard(jargonText, copyButton);
-            copyContainer.appendChild(copyButton);
-            aiBubble.parentNode.appendChild(copyContainer);
-
-
-            // 8. Add a random tip
-            const randomTip = tips[Math.floor(Math.random() * tips.length)];
-            const tipDiv = document.createElement('div');
-            tipDiv.className = 'text-center text-xs text-gray-500 italic mt-2 p-2 bg-yellow-50 rounded-lg shadow-inner';
-            tipDiv.textContent = randomTip;
-            chatHistory.appendChild(tipDiv);
-
-
-        } catch (error) {
-            // 9. Handle errors
-            removeTypingIndicator();
-            console.error("Final Jargonify Error:", error.message);
-            createMessageBubble("❌ Error: The Q4 goal of reaching the backend has failed. Please verify the server is running on localhost:8080 and try again. We need to recalibrate this strategy.", 'ai', '🚨 System Alert:');
-        } finally {
-            // 10. Re-enable input and button
-            jargonifyButton.disabled = false;
-            userInput.disabled = false;
-        }
+      const userText = userInput.value.trim();
+      errorMessage.classList.add('hidden');
+      if (!userText) {
+        errorMessage.textContent = 'Please provide a simple message to jargonify.';
+        errorMessage.classList.remove('hidden');
+        return;
+      }
+      jargonifyButton.disabled = true;
+      userInput.disabled = true;
+      createMessageBubble(userText, 'user');
+      userInput.value = '';
+      addTypingIndicator();
+      try {
+        const jargonText = await fetchJargonWithRetry(userText);
+        removeTypingIndicator();
+        const aiBubble = createMessageBubble(jargonText, 'ai', '🤖 HR Bot:');
+        const copyContainer = document.createElement('div');
+        copyContainer.className = 'flex justify-start mt-1';
+        const copyButton = document.createElement('button');
+        copyButton.className = 'bg-blue-500 text-white text-xs px-2 py-1 rounded-full shadow hover:bg-blue-600 transition-colors duration-150';
+        copyButton.innerHTML = 'Copy 📋';
+        copyButton.onclick = () => copyToClipboard(jargonText, copyButton);
+        copyContainer.appendChild(copyButton);
+        aiBubble.parentNode.appendChild(copyContainer);
+        const randomTip = tips[Math.floor(Math.random() * tips.length)];
+        const tipDiv = document.createElement('div');
+        tipDiv.className = 'text-center text-xs text-gray-500 italic mt-2 p-2 bg-yellow-50 rounded-lg shadow-inner';
+        tipDiv.textContent = randomTip;
+        chatHistory.appendChild(tipDiv);
+      } catch (error) {
+        removeTypingIndicator();
+        createMessageBubble("❌ Error: Unable to reach backend. Please refresh or try again.", 'ai', '🚨 System Alert:');
+      } finally {
+        jargonifyButton.disabled = false;
+        userInput.disabled = false;
+      }
     }
 
-    // --- Event Listeners ---
     userInput.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault();
-            handleJargonify();
-        }
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        handleJargonify();
+      }
     });
-
 </script>
 </body>
 </html>
