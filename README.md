@@ -25,7 +25,7 @@ into
 
 | Layer | Technology Used |
 |-------|------------------|
-| **Frontend** | HTML, TailwindCSS, JavaScript |
+| **Frontend** | Made by using GEMINI  |
 | **Backend** | Java, Spring Boot |
 | **AI Integration** | Google Gemini API |
 | **Hosting** | Render |
